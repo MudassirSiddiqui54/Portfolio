@@ -1,0 +1,221 @@
+/* Projects Section - Standalone Styles */
+.projects-section-new {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.projects-section-new .section-title-new {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  background: linear-gradient(90deg, #2d8cf0, #43cea2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Projects Grid */
+.projects-grid-new {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 40px;
+}
+
+/* Category Container */
+.proj-category-new {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Category Title */
+.proj-category-new .category-title-new {
+  margin: 0 0 15px;
+  font-size: 1.4rem;
+  color: #ffb347;
+  text-shadow: 0 0 6px #ffb347;
+  border-left: 4px solid #ffb347;
+  padding-left: 15px;
+  font-weight: 600;
+}
+
+/* Cards Container */
+.proj-cards-new {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Project Card */
+.proj-card-new {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s cubic-bezier(.77,0,.175,1);
+  overflow: hidden;
+  position: relative;
+}
+
+.proj-card-new::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s;
+}
+
+.proj-card-new:hover::before {
+  left: 100%;
+}
+
+/* Thumbnail */
+.proj-thumb-new {
+  flex: 0 0 100px;
+  height: 80px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  background-color: #2d8cf0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: transform 0.3s ease;
+}
+
+.proj-card-new:hover .proj-thumb-new {
+  transform: scale(1.05);
+}
+
+/* Info Area */
+.proj-info-new {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.proj-info-new h3 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.proj-info-new p {
+  margin: 0 0 12px;
+  color: rgba(255,255,255,0.82);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Tech Badges */
+.proj-tech-new {
+  font-size: 0.8rem;
+  color: #2d8cf0;
+  background: rgba(45, 140, 240, 0.1);
+  padding: 6px 12px;
+  border-radius: 15px;
+  width: fit-content;
+  border: 1px solid rgba(45, 140, 240, 0.3);
+  font-weight: 500;
+}
+
+/* Hover Effects */
+.proj-card-new:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  border-color: rgba(45, 140, 240, 0.4);
+  background: rgba(255,255,255,0.08);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .projects-grid-new {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-section-new {
+    padding: 40px 15px;
+  }
+  
+  .projects-section-new .section-title-new {
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+  
+  .projects-grid-new {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .proj-card-new {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .proj-thumb-new {
+    flex: none;
+    width: 100%;
+    height: 120px;
+    margin-bottom: 15px;
+  }
+  
+  .proj-info-new {
+    align-items: center;
+  }
+  
+  .proj-info-new p {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-section-new {
+    padding: 30px 10px;
+  }
+  
+  .projects-section-new .section-title-new {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+  
+  .proj-category-new .category-title-new {
+    font-size: 1.2rem;
+  }
+  
+  .proj-card-new {
+    padding: 12px;
+  }
+  
+  .proj-thumb-new {
+    height: 100px;
+  }
+  
+  .proj-info-new h3 {
+    font-size: 1.1rem;
+  }
+  
+  .proj-info-new p {
+    font-size: 0.9rem;
+  }
+}

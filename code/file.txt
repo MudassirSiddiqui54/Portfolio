@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void encryptFile(const char *inputFile, const char *outputFile, int key);
+void decryptFile(const char *inputFile, const char *outputFile, int key);
+
+int main() {
+    int choice, key;
+    char inputFile[100], outputFile[100];
+
+    printf("File Encryption / Decryption Program\n");
+    printf("1. Encrypt a file\n");
+    printf("2. Decrypt a file\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    printf("Enter input file name: ");
+    scanf("%s", inputFile);
+
+    printf("Enter output file name: ");
+    scanf("%s", outputFile);
+
+    printf("Enter key (an integer): ");
+    scanf("%d", &key);
+
+    if (choice == 1)
+        encryptFile(inputFile, outputFile, key);
+    else if (choice == 2)
+        decryptFile(inputFile, outputFile, key);
+    else
+        printf("Invalid choice.\n");
+
+    return 0;
+}
+
+void encryptFile(const char *inputFile, const char *outputFile, int key) {
+    FILE *fin = fopen(inputFile, "rb");
+    FILE *fout = fopen(outputFile, "wb");
+
+    if (fin == NULL || fout == NULL) {
+        printf("Error opening files.\n");
+        return;
+    }
+
+    int byte;
+    while ((byte = fgetc(fin)) != EOF) {
+        fputc((byte + key) % 256, fout);
+    }
+
+    fclose(fin);
+    fclose(fout);
+    printf("File encrypted successfully.\n");
+}
+
+void decryptFile(const char *inputFile, const char *outputFile, int key) {
+    FILE *fin = fopen(inputFile, "rb");
+    FILE *fout = fopen(outputFile, "wb");
+
+    if (fin == NULL || fout == NULL) {
+        printf("Error opening files.\n");
+        return;
+    }
+
+    int byte;
+    while ((byte = fgetc(fin)) != EOF) {
+        fputc((byte - key + 256) % 256, fout);  // Add 256 to avoid negative result
+    }
+
+    fclose(fin);
+    fclose(fout);
+    printf("File decrypted successfully.\n");
+}

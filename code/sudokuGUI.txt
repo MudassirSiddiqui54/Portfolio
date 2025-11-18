@@ -1,0 +1,78 @@
+from tkinter import *
+from tkinter import messagebox
+from SudokuSolver import solve
+
+class SudokuGUI:
+    def __init__(self):
+        self.window = Tk()
+        self.window.title("Sudoku Solver")
+
+        self.entries = []
+        self.prefilled = []
+
+        entry_font = ("Courier", 12)
+        cell_width = 2
+        padding = 0
+
+        for i in range(9):
+            self.entries.append([])
+            self.prefilled.append([])
+            for j in range(9):
+                var = StringVar()
+                entry = Entry(self.window, width=cell_width, font=entry_font,
+                              justify='center', textvariable=var, relief=RIDGE, bd=1, bg="white")
+                entry.grid(row=i, column=j, padx=padding, pady=padding)
+                self.entries[i].append((var, entry))  # Store both var and entry
+                self.prefilled[i].append(False)
+
+        Button(self.window, text="Solve", font=("Arial", 10),
+               command=self.solveSudoku).grid(row=10, column=2, columnspan=5, pady=5)
+
+        Button(self.window, text="Clear", font=("Arial", 10),
+               command=self.clearSudoku).grid(row=11, column=2, columnspan=5, pady=5)
+
+    def solveSudoku(self):
+        grid = []
+
+        # Read input and mark prefilled
+        for i in range(9):
+            row = []
+            for j in range(9):
+                var, entry = self.entries[i][j]
+                val = var.get().strip()
+                if val == "":
+                    row.append(0)
+                    self.prefilled[i][j] = False
+                elif val.isdigit() and 1 <= int(val) <= 9:
+                    row.append(int(val))
+                    self.prefilled[i][j] = True
+                    entry.config(bg="lightgray")  # Prefilled background
+                else:
+                    messagebox.showerror("Error", f"Invalid input at ({i+1},{j+1})")
+                    return
+            grid.append(row)
+
+        # Solve Sudoku
+        if solve(grid):
+            for i in range(9):
+                for j in range(9):
+                    var, entry = self.entries[i][j]
+                    var.set(str(grid[i][j]))
+                    if not self.prefilled[i][j]:
+                        entry.config(bg="white")  # Solver-filled cell
+        else:
+            messagebox.showwarning("Result", "❌ No solution exists")
+
+    def clearSudoku(self):
+        for i in range(9):
+            for j in range(9):
+                var, entry = self.entries[i][j]
+                var.set("")
+                entry.config(bg="white")
+                self.prefilled[i][j] = False
+
+    def run(self):
+        self.window.mainloop()
+
+if __name__ == '__main__':
+    SudokuGUI().run()

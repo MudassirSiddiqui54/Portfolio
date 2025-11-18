@@ -1,0 +1,210 @@
+/* Variables */
+:root {
+  --accent: #25D366;            /* WhatsApp-like green (change to your brand color) */
+  --line-color: rgba(255,255,255,0.08);
+  --card-bg: rgba(255,255,255,0.06); /* faint for glass */
+  --card-border: rgba(255,255,255,0.14);
+  --text: #fff;
+  --muted: rgba(255,255,255,0.7);
+}
+
+/* Section */
+#education {
+  padding: 48px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  color: var(--text);
+  position: relative;
+}
+
+/* Timeline container */
+.timeline {
+  position: relative;
+  padding: 20px 0;
+  margin-left: 20px;
+}
+
+/* The vertical connecting line */
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 28px;                 /* position of the line */
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(255, 239, 239, 0.76), rgb(218, 240, 250));
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6) inset;
+}
+
+/* Each timeline item */
+.timeline-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin: 18px 0;
+  padding-left: 60px;         /* creates space so cards sit right of the line */
+}
+
+/* The circular node */
+.timeline-dot {
+  position: absolute;
+  left: 20px;                 /* aligns center with the line (left + width/2) */
+  top: 20px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow:
+    0 0 0 4px rgba(141, 203, 41, 0.12),   /* soft halo */
+    0 2px 8px rgba(0,0,0,0.6);
+  border: 2px solid rgba(199, 112, 112, 0.2);
+  transform: translateY(0);
+  z-index: 2;
+}
+
+/* Card that holds the item content */
+.timeline-card {
+  flex: 1;
+  min-width: 220px;
+  max-width: 760px;
+  padding: 14px 18px;
+  border-radius: 12px;
+
+  /* glassmorphism look */
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  color: var(--text);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+/* Hover lift */
+.timeline-item:hover .timeline-card {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+}
+
+/* Time and headings */
+.timeline-time {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.timeline-card h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.timeline-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* Small screens: slightly compact the layout */
+@media (max-width: 720px) {
+  .timeline::before { left: 16px; width: 2px; }
+  .timeline-item { padding-left: 48px; margin: 16px 0; }
+  .timeline-dot { left: 8px; top: 18px; width: 12px; height: 12px; }
+  .timeline-card { padding: 12px 14px; border-radius: 10px; }
+}
+
+/* Optional: alternating sides style (if you prefer cards flip sides) */
+/* .timeline-item:nth-child(odd) .timeline-card { margin-left: 20px; }
+   .timeline-item:nth-child(even) .timeline-card { margin-left: 80px; } */
+
+/* Large screens (desktops >1200px) */
+@media (min-width: 1200px) {
+  #education {
+    max-width: 1100px;
+  }
+  .timeline-card {
+    max-width: 850px;
+    font-size: 1rem;
+  }
+}
+
+/* Tablets */
+@media (max-width: 992px) {
+  #education {
+    padding: 40px 15px;
+  }
+  .timeline {
+    margin-left: 15px;
+  }
+  .timeline-card {
+    max-width: 600px;
+    font-size: 0.95rem;
+  }
+  .timeline-time {
+    font-size: 0.85rem;
+  }
+}
+
+/* Small screens (already have some rules, extend them) */
+@media (max-width: 720px) {
+  #education {
+    padding: 30px 12px;
+  }
+  .timeline::before {
+    left: 12px;
+    width: 2px;
+  }
+  .timeline-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 40px;
+    gap: 12px;
+  }
+  .timeline-dot {
+    left: 2px;
+    top: 12px;
+    width: 10px;
+    height: 10px;
+  }
+  .timeline-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+  .timeline-card h3 {
+    font-size: 1rem;
+  }
+  .timeline-card p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}
+
+/* Extra small screens (phones <480px) */
+@media (max-width: 480px) {
+  #education {
+    padding: 20px 10px;
+  }
+  .timeline-item {
+    padding-left: 28px;
+  }
+  .timeline-dot {
+    left: -2px;
+  }
+  .timeline-card {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  .timeline-card h3 {
+    font-size: 0.95rem;
+  }
+  .timeline-time {
+    font-size: 0.8rem;
+  }
+}
+

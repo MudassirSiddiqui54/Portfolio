@@ -1,0 +1,156 @@
+#include <stdio.h>
+#define MAX 10
+
+// Transpose a matrix
+int transpose() {
+    int r, c;
+    printf("Enter rows and columns of matrix: ");
+    scanf("%d %d", &r, &c);
+    int arr[r][c];
+
+    printf("Enter elements of matrix:\n");
+    for (int i = 0; i < r; i++)
+        for (int j = 0; j < c; j++) {
+            printf("Enter element (%d, %d): ", i + 1, j + 1);
+            scanf("%d", &arr[i][j]);
+        }
+
+    printf("\nOriginal Matrix:\n");
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++)
+            printf("  %d  ", arr[i][j]);
+        printf("\n");
+    }
+
+    printf("\nTransposed Matrix:\n");
+    for (int i = 0; i < c; i++) {
+        for (int j = 0; j < r; j++)
+            printf("  %d  ", arr[j][i]);
+        printf("\n");
+    }
+
+    return 0;
+}
+
+// Cofactor helper for determinant
+void getCofactor(int mat[MAX][MAX], int temp[MAX][MAX], int p, int q, int n) {
+    int i = 0, j = 0;
+    for (int row = 0; row < n; row++)
+        for (int col = 0; col < n; col++)
+            if (row != p && col != q) {
+                temp[i][j++] = mat[row][col];
+                if (j == n - 1) {
+                    j = 0;
+                    i++;
+                }
+            }
+}
+
+// Recursive determinant function
+int determinant(int mat[MAX][MAX], int n) {
+    if (n == 1) return mat[0][0];
+
+    int temp[MAX][MAX], det = 0, sign = 1;
+    for (int f = 0; f < n; f++) {
+        getCofactor(mat, temp, 0, f, n);
+        det += sign * mat[0][f] * determinant(temp, n - 1);
+        sign = -sign;
+    }
+    return det;
+}
+
+// Determinant interface
+int calcDeterminant() {
+    int n, mat[MAX][MAX];
+    printf("Enter size of square matrix (n x n): ");
+    scanf("%d", &n);
+
+    printf("Enter matrix elements:\n");
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &mat[i][j]);
+
+    int result = determinant(mat, n);
+    printf("Determinant = %d\n", result);
+
+    return 0;
+}
+
+// Matrix multiplication
+int matrixmultiply() {
+    int a[MAX][MAX], b[MAX][MAX], c[MAX][MAX];
+    int m, n, p;
+
+    printf("Enter rows and columns of first matrix: ");
+    scanf("%d %d", &m, &n);
+
+    printf("Enter elements of first matrix:\n");
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++) {
+            printf("Enter element A[%d][%d]: ", i + 1, j + 1);
+            scanf("%d", &a[i][j]);
+        }
+
+    printf("Enter number of columns of second matrix (rows = %d): ", n);
+    scanf("%d", &p);
+
+    printf("Enter elements of second matrix:\n");
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < p; j++) {
+            printf("Enter element B[%d][%d]: ", i + 1, j + 1);
+            scanf("%d", &b[i][j]);
+        }
+
+    // Matrix multiplication
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < p; j++) {
+            c[i][j] = 0;
+            for (int k = 0; k < n; k++)
+                c[i][j] += a[i][k] * b[k][j];
+        }
+
+    printf("\nMatrix A:\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++)
+            printf("  %d  ", a[i][j]);
+        printf("\n");
+    }
+
+    printf("\nMatrix B:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < p; j++)
+            printf("  %d  ", b[i][j]);
+        printf("\n");
+    }
+
+    printf("\nResultant Matrix (A x B):\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < p; j++)
+            printf("  %4d  ", c[i][j]);
+        printf("\n");
+    }
+
+    return 0;
+}
+
+// MAIN MENU
+int main() {
+    int operation;
+    printf("---------- Matrix Calculator ----------\n");
+    printf("Choose an operation:\n");
+    printf("  1 : Transpose of a matrix\n");
+    printf("  2 : Determinant of a matrix\n");
+    printf("  3 : Matrix multiplication\n");
+    printf("---------------------------------------\n");
+    printf("Enter your choice: ");
+    scanf("%d", &operation);
+
+    switch (operation) {
+        case 1: transpose(); break;
+        case 2: calcDeterminant(); break;
+        case 3: matrixmultiply(); break;
+        default: printf("Invalid option.\n");
+    }
+
+    return 0;
+}

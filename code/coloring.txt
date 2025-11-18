@@ -1,0 +1,225 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+import matplotlib.pyplot as plt
+import networkx as nx
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+class GraphColoringApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Graph Coloring Algorithm")
+        self.root.geometry("1000x700")
+        
+        # Graph data
+        self.vertices = []
+        self.edges = []
+        self.colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'pink', 'brown', 'gray', 'cyan']
+        self.solution = {}
+        
+        # Create frames
+        self.control_frame = tk.Frame(root, bg='lightgray', height=100)
+        self.control_frame.pack(fill=tk.X, padx=10, pady=5)
+        
+        self.canvas_frame = tk.Frame(root)
+        self.canvas_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        
+        # Create controls
+        self.create_controls()
+        
+        # Initialize matplotlib figure
+        self.fig, self.ax = plt.subplots(figsize=(8, 6))
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.canvas_frame)
+        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        
+        self.draw_empty_graph()
+    
+    def create_controls(self):
+        # Vertex controls
+        tk.Label(self.control_frame, text="Vertex:", bg='lightgray').grid(row=0, column=0, padx=5, pady=5)
+        self.vertex_entry = tk.Entry(self.control_frame, width=10)
+        self.vertex_entry.grid(row=0, column=1, padx=5, pady=5)
+        
+        tk.Button(self.control_frame, text="Add Vertex", command=self.add_vertex).grid(row=0, column=2, padx=5, pady=5)
+        
+        # Edge controls
+        tk.Label(self.control_frame, text="Edge (A-B):", bg='lightgray').grid(row=1, column=0, padx=5, pady=5)
+        self.edge_entry = tk.Entry(self.control_frame, width=10)
+        self.edge_entry.grid(row=1, column=1, padx=5, pady=5)
+        
+        tk.Button(self.control_frame, text="Add Edge", command=self.add_edge).grid(row=1, column=2, padx=5, pady=5)
+        
+        # Algorithm controls
+        tk.Button(self.control_frame, text="Solve Graph Coloring", command=self.solve_coloring).grid(row=2, column=0, columnspan=2, padx=5, pady=5)
+        
+        tk.Button(self.control_frame, text="Clear Graph", command=self.clear_graph).grid(row=2, column=2, padx=5, pady=5)
+        
+        tk.Button(self.control_frame, text="Load Example", command=self.load_example).grid(row=3, column=0, padx=5, pady=5)
+        
+        # Info display
+        self.info_label = tk.Label(self.control_frame, text="Add vertices and edges to begin", bg='lightgray')
+        self.info_label.grid(row=3, column=1, columnspan=2, padx=5, pady=5)
+    
+    def add_vertex(self):
+        vertex = self.vertex_entry.get().strip().upper()
+        if vertex and vertex not in self.vertices:
+            self.vertices.append(vertex)
+            self.vertex_entry.delete(0, tk.END)
+            self.update_display()
+        elif vertex in self.vertices:
+            messagebox.showwarning("Warning", f"Vertex {vertex} already exists!")
+    
+    def add_edge(self):
+        edge_str = self.edge_entry.get().strip().upper()
+        if '-' in edge_str:
+            parts = edge_str.split('-')
+            if len(parts) == 2:
+                v1, v2 = parts[0].strip(), parts[1].strip()
+                if v1 in self.vertices and v2 in self.vertices:
+                    edge = (min(v1, v2), max(v1, v2))
+                    if edge not in self.edges and v1 != v2:
+                        self.edges.append(edge)
+                        self.edge_entry.delete(0, tk.END)
+                        self.update_display()
+                    else:
+                        messagebox.showwarning("Warning", "Edge already exists or self-loop not allowed!")
+                else:
+                    messagebox.showwarning("Warning", "Vertices not found!")
+            else:
+                messagebox.showwarning("Warning", "Enter edge as 'A-B'")
+        else:
+            messagebox.showwarning("Warning", "Enter edge as 'A-B'")
+    
+    def is_safe(self, vertex, color, coloring):
+        """Check if it's safe to color vertex with given color"""
+        for edge in self.edges:
+            if edge[0] == vertex:
+                neighbor = edge[1]
+                if neighbor in coloring and coloring[neighbor] == color:
+                    return False
+            elif edge[1] == vertex:
+                neighbor = edge[0]
+                if neighbor in coloring and coloring[neighbor] == color:
+                    return False
+        return True
+    
+    def graph_coloring_util(self, vertex_index, coloring, m):
+        """Backtracking utility function for graph coloring"""
+        if vertex_index == len(self.vertices):
+            return True
+        
+        vertex = self.vertices[vertex_index]
+        
+        for color in range(m):
+            if self.is_safe(vertex, color, coloring):
+                coloring[vertex] = color
+                
+                if self.graph_coloring_util(vertex_index + 1, coloring, m):
+                    return True
+                
+                # Backtrack
+                del coloring[vertex]
+        
+        return False
+    
+    def solve_coloring(self):
+        """Solve graph coloring problem"""
+        if not self.vertices:
+            messagebox.showwarning("Warning", "No vertices in graph!")
+            return
+        
+        # Try with increasing number of colors
+        for m in range(1, len(self.vertices) + 1):
+            coloring = {}
+            if self.graph_coloring_util(0, coloring, m):
+                self.solution = coloring
+                chromatic_number = m
+                self.info_label.config(text=f"Chromatic Number: {chromatic_number}")
+                self.update_display()
+                return
+        
+        # Should not reach here for simple graphs
+        messagebox.showerror("Error", "No solution found!")
+    
+    def update_display(self):
+        """Update the graph display"""
+        self.ax.clear()
+        
+        if not self.vertices:
+            self.draw_empty_graph()
+            return
+        
+        # Create networkx graph
+        G = nx.Graph()
+        G.add_nodes_from(self.vertices)
+        G.add_edges_from(self.edges)
+        
+        # Calculate layout
+        pos = nx.spring_layout(G, seed=42)
+        
+        # Prepare node colors
+        node_colors = []
+        for vertex in self.vertices:
+            if vertex in self.solution:
+                node_colors.append(self.colors[self.solution[vertex] % len(self.colors)])
+            else:
+                node_colors.append('lightblue')
+        
+        # Draw the graph
+        nx.draw_networkx_nodes(G, pos, node_size=800, node_color=node_colors, 
+                              edgecolors='black', linewidths=2)
+        nx.draw_networkx_edges(G, pos, width=2, alpha=0.7)
+        nx.draw_networkx_labels(G, pos, font_size=12, font_weight='bold')
+        
+        # Add legend for colors
+        if self.solution:
+            used_colors = set(self.solution.values())
+            legend_elements = []
+            for color_idx in used_colors:
+                legend_elements.append(plt.Line2D([0], [0], marker='o', color='w', 
+                                                markerfacecolor=self.colors[color_idx % len(self.colors)], 
+                                                markersize=10, label=f'Color {color_idx + 1}'))
+            self.ax.legend(handles=legend_elements, loc='upper right')
+        
+        self.ax.set_title("Graph Coloring Solution", fontsize=14, fontweight='bold')
+        self.ax.axis('off')
+        
+        # Display current graph info
+        graph_info = f"Vertices: {len(self.vertices)}, Edges: {len(self.edges)}"
+        if self.solution:
+            graph_info += f" | Colors used: {len(set(self.solution.values()))}"
+        
+        self.ax.text(0.5, -0.1, graph_info, transform=self.ax.transAxes, 
+                    ha='center', fontsize=10, bbox=dict(boxstyle="round,pad=0.3", facecolor="lightgray"))
+        
+        self.canvas.draw()
+    
+    def draw_empty_graph(self):
+        """Draw empty graph state"""
+        self.ax.clear()
+        self.ax.text(0.5, 0.5, "Add vertices and edges\nusing the controls above", 
+                    ha='center', va='center', transform=self.ax.transAxes, fontsize=12)
+        self.ax.set_title("Graph Coloring Algorithm", fontsize=14, fontweight='bold')
+        self.ax.axis('off')
+        self.canvas.draw()
+    
+    def clear_graph(self):
+        """Clear the graph"""
+        self.vertices = []
+        self.edges = []
+        self.solution = {}
+        self.info_label.config(text="Graph cleared")
+        self.update_display()
+    
+    def load_example(self):
+        """Load an example graph"""
+        self.vertices = ['A', 'B', 'C', 'D', 'E']
+        self.edges = [('A', 'B'), ('A', 'C'), ('B', 'C'), ('B', 'D'), ('C', 'D'), ('D', 'E')]
+        self.solution = {}
+        self.info_label.config(text="Example graph loaded - Click 'Solve'")
+        self.update_display()
+
+# Main application
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = GraphColoringApp(root)
+    root.mainloop()

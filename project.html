@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project - My Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="projects-new.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Your existing CSS styles */
+        .project-detail {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+            color: #fff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #2d8cf0;
+            text-decoration: none;
+            margin-bottom: 40px;
+            padding: 12px 24px;
+            border: 2px solid #2d8cf0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: rgba(45, 140, 240, 0.1);
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: #2d8cf0;
+            color: #fff;
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(45, 140, 240, 0.4);
+        }
+
+        .project-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .project-title {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, #2d8cf0, #43cea2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .project-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .project-tech {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .tech-tag {
+            background: rgba(45, 140, 240, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid #2d8cf0;
+            color: #2d8cf0;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background: #2d8cf0;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .preview-section {
+            background: rgba(255,255,255,0.06);
+            border-radius: 15px;
+            padding: 0;
+            margin-bottom: 50px;
+            border: 1px solid rgba(255,255,255,0.12);
+            overflow: hidden;
+        }
+
+        .preview-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-header h3 {
+            margin: 0;
+            color: #ffb347;
+            font-size: 1.4rem;
+        }
+
+        .preview-content {
+            padding: 30px;
+        }
+
+        .project-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .project-screenshot {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .code-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .code-section {
+            background: rgba(255,255,255,0.06);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.12);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .code-section.active {
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        .code-header {
+            padding: 20px 30px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .code-header:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .code-header h4 {
+            margin: 0;
+            color: #fff;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .code-icon {
+            color: #2d8cf0;
+            font-size: 1.1rem;
+        }
+
+        .code-toggle {
+            color: #2d8cf0;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .code-section.active .code-toggle {
+            transform: rotate(180deg);
+        }
+
+.code-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    background: #1a1a2e;
+}
+
+.code-section.active .code-content {
+    max-height: 500px; /* Fixed height instead of 1000px */
+}
+
+.code-block {
+    padding: 30px;
+    margin: 0;
+    max-height: 440px; /* 500px - 60px padding */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+/* Custom scrollbar for code block */
+.code-block::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.code-block::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.code-block::-webkit-scrollbar-thumb {
+    background: rgba(45, 140, 240, 0.5);
+    border-radius: 4px;
+}
+
+.code-block::-webkit-scrollbar-thumb:hover {
+    background: rgba(45, 140, 240, 0.7);
+}
+
+pre {
+    margin: 0;
+    color: #e8e8ff;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-width: min-content; /* Ensure pre doesn't shrink too much */
+}
+
+/* For very long lines that shouldn't wrap */
+pre code {
+    display: block;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+.loading-code {
+    color: #6272a4;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+        .features-section {
+            margin-top: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.06);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #2d8cf0;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .feature-item h4 {
+            color: #ffb347;
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .feature-item p {
+            margin: 0;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .project-detail {
+                padding: 60px 15px 30px;
+            }
+            .project-title {
+                font-size: 2.5rem;
+            }
+            .project-subtitle {
+                font-size: 1.1rem;
+            }
+            .preview-header, .code-header {
+                padding: 20px;
+            }
+            .preview-content {
+                padding: 20px;
+            }
+            .project-iframe {
+                height: 300px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="bg"></canvas>
+
+    <div class="project-detail">
+        <a href="index.html#projects" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Back to Projects
+        </a>
+
+        <div class="project-header">
+            <h1 class="project-title" id="project-title">Loading...</h1>
+            <p class="project-subtitle" id="project-subtitle"></p>
+            <div class="project-tech" id="project-tech"></div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <div class="preview-header">
+                <h3><i class="fas fa-eye code-icon"></i> Project Preview</h3>
+            </div>
+            <div class="preview-content">
+                <div id="preview-container"></div>
+            </div>
+        </div>
+
+        <!-- Code Sections -->
+        <div class="code-sections" id="code-sections"></div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="preview-header">
+                <h3><i class="fas fa-star code-icon"></i> Key Features</h3>
+            </div>
+            <div class="features-grid" id="features-grid"></div>
+        </div>
+    </div>
+
+    <script src="particle-background.js"></script>
+    <script>
+        // All project data in one place
+      const projectsData = {
+    "connect-four": {
+        title: "Connect Four Game",
+        subtitle: "A two-player connection game implementation",
+        technologies: ["Python", "Pygame", "Game Development", "Algorithms"],
+        previewType: "screenshot",
+        previewContent: "screenshots/connect.jpg",
+        features: [
+            { title: "🎮 Two Player Mode", description: "Play against a friend locally with intuitive controls" },
+            { title: "🎯 Win Detection", description: "Automatic detection of horizontal, vertical, and diagonal wins" }
+        ],
+        codeFiles: [
+            { 
+                title: "Main Game File", 
+                icon: "fas fa-gamepad",
+                language: "python",
+                file: "code/connect.txt"
+            }
+        ]
+    },
+    "coloring-problem": {
+        title: "Graph Coloring Problem",
+        subtitle: "Algorithm to color graph vertices with minimum colors using backtracking",
+        technologies: ["Python", "Algorithms", "Graph Theory", "Backtracking"],
+        previewType: "screenshot", 
+        previewContent: "screenshots/coloring.jpg",
+        features: [
+            { title: "🎨 Optimal Coloring", description: "Finds the minimum number of colors needed" },
+            { title: "📊 Visualization", description: "Graphical representation of colored vertices" },
+            { title: "⚡ Efficient Algorithm", description: "Uses backtracking with pruning for performance" }
+        ],
+        codeFiles: [
+            {
+                title: "Main Algorithm",
+                icon: "fas fa-code",
+                language: "python", 
+                file: "code/coloring.txt"
+            }
+        ]
+    },
+    "word-guessing": {
+        title: "Hangman Game",
+        subtitle: "Interactive word puzzle game",
+        technologies: ["Python", "Game Development"],
+        previewType: "screenshot",
+        previewContent: "screenshots/hangman.jpg",
+        features: [
+            { title: "🔤 Word Database", description: "Large collection of words" }
+        ],
+        codeFiles: [
+            {
+                title: "Game Logic",
+                icon: "fas fa-keyboard",
+                language: "python",
+                file: "code/hangman.txt"
+            }
+        ]
+    },
+    "todo-list": {
+        title: "To-Do List Manager",
+        subtitle: "Task management application using Tkinter",
+        technologies: ["Python", "Tkinter", "GUI Development"],
+        previewType: "screenshot",
+        previewContent: "screenshots/to-do.jpg",
+        features: [
+            { title: "📝 Task Management", description: "Add, edit, delete and organize tasks efficiently" }
+        ],
+        codeFiles: [
+            {
+                title: "Main Application",
+                icon: "fas fa-tasks",
+                language: "python",
+                file: "code/to-do.txt"
+            }
+        ]
+    },
+    "sudoku-solver": {
+        title: "Sudoku Solver",
+        subtitle: "Backtracking algorithm to solve Sudoku puzzles efficiently",
+        technologies: ["Python", "Algorithms", "Backtracking", "Puzzle Solving"],
+        previewType: "screenshot",
+        previewContent: "screenshots/sudoku.jpg",
+        features: [
+            { title: "🧩 Puzzle Solving", description: "Solves any valid Sudoku puzzle" },
+            { title: "⚡ Fast Algorithm", description: "Uses efficient backtracking with constraint propagation" }
+        ],
+        codeFiles: [
+            {
+                title: "Sudokusolver.py",
+                icon: "fas fa-puzzle-piece",
+                language: "python",
+                file: "code/sudokusolver.txt"
+            },
+            {
+                title: "SudokuGUI.py",
+                icon: "fas fa-puzzle-piece",
+                language: "python",
+                file: "code/sudokuGUI.txt"
+            }
+        ]
+    },
+    "mini-os": {
+        title: "Mini Operating System",
+        subtitle: "Basic OS with process scheduling and memory management",
+        technologies: ["C", "Operating Systems"],
+        previewType: "screenshot",
+        previewContent: "screenshots/os.jpg",
+        features: [
+            { title: "⚙️ Process Scheduling", description: "Implements basic process management and scheduling" },
+            { title: "💾 Memory Management", description: "Handles memory allocation and deallocation" },
+            { title: "🔧 System Calls", description: "Basic system call interface implementation" }
+        ],
+        codeFiles: [
+            {
+                title: "Kernel Main",
+                icon: "fas fa-cog",
+                language: "c",
+                file: "code/os.txt"
+            }
+        ]
+    },
+    "matrix-calculator": {
+        title: "Matrix Calculator",
+        subtitle: "Perform matrix operations and linear algebra computations",
+        technologies: ["C", "Mathematics", "Algorithms"],
+        previewType: "screenshot",
+        previewContent: "screenshots/matrix.jpg",
+        features: [
+            { title: "🧮 Matrix Operations", description: "Addition, multiplication, determinant, inverse, transpose" },
+            { title: "💻 Efficient Computation", description: "Optimized algorithms for large matrices" }
+        ],
+        codeFiles: [
+            {
+                title: "Matrix Library",
+                icon: "fas fa-calculator",
+                language: "c",
+                file: "code/matrix.txt"
+            }
+        ]
+    },
+    "myshell": {
+        title: "MyShell using C",
+        subtitle: "Custom shell implementation with command execution and piping",
+        technologies: ["C", "System Programming"],
+        previewType: "screenshot",
+        previewContent: "screenshots/shell.jpg",
+        features: [
+            { title: "💻 Command Execution", description: "Executes system commands and programs" },
+            { title: "📡 Piping Support", description: "Supports command piping and redirection" },
+            { title: "⚡ Built-in Commands", description: "Custom built-in commands implementation" }
+        ],
+        codeFiles: [
+            {
+                title: "Shell Main",
+                icon: "fas fa-terminal",
+                language: "c",
+                file: "code/shell.txt"
+            }
+        ]
+    },
+    "file-encryption": {
+        title: "File Encryption/Decryption",
+        subtitle: "Secure file encryption using cryptographic algorithms",
+        technologies: ["C", "Cryptography", "Security"],
+        previewType: "screenshot",
+        previewContent: "screenshots/file.jpg",
+        features: [
+            { title: "🔑 Key Management", description: "Secure key generation and storage" }
+        ],
+        codeFiles: [
+            {
+                title: "Encryption Engine",
+                icon: "fas fa-lock",
+                language: "c",
+                file: "code/file.txt"
+            }
+        ]
+    },
+    "portfolio": {
+        title: "Portfolio Website",
+        subtitle: "Personal portfolio with responsive design and interactive elements",
+        technologies: ["HTML", "CSS", "JavaScript"],
+        previewType: "iframe",
+        previewContent: "index.html",
+        features: [
+            { title: "📱 Responsive Design", description: "Works perfectly on all device sizes" },
+            { title: "🎨 Modern UI/UX", description: "Clean and professional design with smooth animations" },
+            { title: "⚡ Fast Performance", description: "Optimized for quick loading and smooth interactions" }
+        ],
+        codeFiles: [
+            {
+                title: "Main HTML",
+                icon: "fas fa-code",
+                language: "html",
+                file: "index.html"
+            }
+        ]
+    },
+    "car-inventory": {
+        title: "Car Inventory Management",
+        subtitle: "Frontend car inventory system developed with team collaboration",
+        technologies: ["HTML", "CSS", "JavaScript", "Local Storage"],
+        previewType: "iframe",
+        previewContent: "https://hardiksedani.github.io/COLLEGEPROJECT1/",
+        features: [
+            { title: "🚗 Inventory Management", description: "Add, search, and manage car inventory" },
+            { title: "👥 Multi-user Support", description: "Role-based access for different users" }
+        ],
+        codeFiles: [
+            {
+                title: "Frontend Interface",
+                icon: "fas fa-car",
+                language: "html",
+                file: "code/car.txt"
+            }
+        ]
+    },
+    "bird-game": {
+        title: "Flappy Bird gmae",
+        subtitle: "Classic Flappy Bird game implemented using HTML5 Canvas",
+        technologies: ["HTML", "CSS", "JavaScript", "Canvas"],
+        previewType: "iframe",
+        previewContent: "code/flappybird.html",
+        features: [
+            { title: "🏆 High Score System", description: "Local storage for tracking best scores" }
+        ],
+        codeFiles: [
+            {
+                title: "Game Engine",
+                icon: "fas fa-gamepad",
+                language: "html",
+                file: "code/flappybird.html"
+            }
+        ]
+    }
+};
+
+        // Get project ID from URL
+        function getProjectId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('project');
+        }
+
+        // Load text file content
+        async function loadTextFile(filePath) {
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`File not found: ${filePath}`);
+                }
+                return await response.text();
+            } catch (error) {
+                console.error('Error loading file:', error);
+                return `// Error loading file: ${filePath}\n// Make sure the file exists in the correct location`;
+            }
+        }
+
+        // Load project data
+        async function loadProject() {
+            const projectId = getProjectId();
+            const projectData = projectsData[projectId];
+
+            if (!projectData) {
+                window.location.href = 'index.html#projects';
+                return;
+            }
+
+            // Update basic project info
+            document.getElementById('project-title').textContent = projectData.title;
+            document.getElementById('project-subtitle').textContent = projectData.subtitle;
+            document.title = `${projectData.title} - My Portfolio`;
+
+            // Update technologies
+            const techContainer = document.getElementById('project-tech');
+            techContainer.innerHTML = projectData.technologies.map(tech => 
+                `<span class="tech-tag">${tech}</span>`
+            ).join('');
+
+// Update preview
+const previewContainer = document.getElementById('preview-container');
+if (projectData.previewType === 'iframe') {
+    previewContainer.innerHTML = `<iframe src="${projectData.previewContent}" class="project-iframe" allowfullscreen></iframe>`;
+} else {
+    // Add error handling for missing images
+    previewContainer.innerHTML = `
+        <img src="${projectData.previewContent}" alt="${projectData.title}" class="project-screenshot" 
+             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWExYTFhIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlByb2plY3QgUHJldmlldzwvdGV4dD4KPC9zdmc+'">
+    `;
+}
+
+            // Update features
+            const featuresContainer = document.getElementById('features-grid');
+            featuresContainer.innerHTML = projectData.features.map(feature => `
+                <div class="feature-item">
+                    <h4>${feature.title}</h4>
+                    <p>${feature.description}</p>
+                </div>
+            `).join('');
+
+            // Load code sections from text files
+            await loadCodeSections(projectData.codeFiles);
+        }
+
+        // Load code sections from text files
+        async function loadCodeSections(codeFiles) {
+            const codeSectionsContainer = document.getElementById('code-sections');
+            
+            // Show loading state
+            codeSectionsContainer.innerHTML = `
+                <div class="code-section">
+                    <div class="code-header">
+                        <h4><i class="fas fa-spinner fa-spin code-icon"></i> Loading Code...</h4>
+                    </div>
+                </div>
+            `;
+
+            const codeSectionsHTML = [];
+
+            for (const section of codeFiles) {
+                const codeContent = await loadTextFile(section.file);
+                
+                codeSectionsHTML.push(`
+                    <div class="code-section ${codeSectionsHTML.length === 0 ? 'active' : ''}">
+                        <div class="code-header" onclick="toggleCodeSection(this)">
+                            <h4><i class="${section.icon} code-icon"></i> ${section.title}</h4>
+                            <i class="fas fa-chevron-down code-toggle"></i>
+                        </div>
+                        <div class="code-content" style="${codeSectionsHTML.length === 0 ? 'max-height: 1000px' : ''}">
+                            <div class="code-block">
+                                <pre><code class="language-${section.language}">${escapeHtml(codeContent)}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+
+            codeSectionsContainer.innerHTML = codeSectionsHTML.join('');
+            applySyntaxHighlighting();
+        }
+
+        // Toggle code sections
+        function toggleCodeSection(header) {
+            const section = header.parentElement;
+            const content = section.querySelector('.code-content');
+            const isActive = section.classList.contains('active');
+
+            // Close all sections
+            document.querySelectorAll('.code-section').forEach(s => {
+                s.classList.remove('active');
+                s.querySelector('.code-content').style.maxHeight = '0';
+            });
+
+            // Open clicked section if it wasn't active
+            if (!isActive) {
+                section.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        }
+
+        // Helper functions
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function applySyntaxHighlighting() {
+            // Basic syntax highlighting can be added here if desired
+        }
+
+        // Load project when page loads
+        document.addEventListener('DOMContentLoaded', loadProject);
+    </script>
+</body>
+</html>

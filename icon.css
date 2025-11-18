@@ -1,0 +1,183 @@
+#about i {
+  color:rgb(188, 32, 236);
+  border: 2px solid rgb(177, 88, 255);
+  border-radius: 50px;
+  padding: 10px;
+  font-size: 24px;
+  box-shadow: 0 0 8px rgb(206, 107, 245);
+  background: rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  margin: 10px;
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 30px 0 20px; /* extra space for labels */
+}
+
+.icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.text {
+  margin-top: 15px;      /* instead of using bottom positioning */
+  opacity: 0;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 0 5px #fff;
+  white-space: nowrap;
+  position: static;      /* keep it in normal flow */
+}
+
+.icon:hover .text {
+  opacity: 1;
+  transform: translateY(-5px); /* smooth upward float */
+}
+
+
+    .layer {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      transition: transform 0.4s ease;
+    }
+
+    .icon:hover .layer {
+      transform: rotate(-35deg) skew(20deg);
+    }
+
+    .layer span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 1px solid;
+      border-radius: 8px;
+      background: transparent;
+      box-shadow: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .layer span.fab {
+      font-size: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      color: inherit;
+      text-shadow: 0 0 4px currentColor, 0 0 10px currentColor;
+    }
+
+    /* Stack layers with transparency */
+    .icon .layer span:nth-child(1) { opacity: 0.2; }
+    .icon .layer span:nth-child(2) { opacity: 0.4; }
+    .icon .layer span:nth-child(3) { opacity: 0.6; }
+    .icon .layer span:nth-child(4) { opacity: 0.8; }
+    .icon .layer span:nth-child(5) { opacity: 1; }
+
+    /* Hover 3D movement */
+    .icon:hover .layer span:nth-child(1) { transform: translate(5px, -5px); }
+    .icon:hover .layer span:nth-child(2) { transform: translate(10px, -10px); }
+    .icon:hover .layer span:nth-child(3) { transform: translate(15px, -15px); }
+    .icon:hover .layer span:nth-child(4) { transform: translate(20px, -20px); }
+    .icon:hover .layer span:nth-child(5) { transform: translate(25px, -25px); }
+
+
+    /* Neon color themes */
+  .youtube { color: #FF0000; }
+.youtube .layer span,
+.youtube .fab {
+  border-color: #FF0000;
+  box-shadow: 0 0 5px #FF0000;
+  color: #FF0000;   /* keep icon red */
+}
+
+.instagram { color: #d6249f; }
+.instagram .layer span,
+.instagram .fab {
+  border-color: #d6249f;
+  box-shadow: 0 0 5px #d6249f;
+  color: #d6249f;   /* keep icon pink */
+}
+
+.linkedin { color: #0A66C2; }
+.linkedin .layer span,
+.linkedin .fab {
+  border-color: #0A66C2;
+  box-shadow: 0 0 5px #0A66C2;
+  color: #0A66C2;   /* keep icon blue */
+}
+
+.x-github { color: #ffffff; }
+.x-github .layer span,
+.x-github .fab {
+  border-color: #ffffff;
+  box-shadow: 0 0 5px #ffffff;
+  color: #ffffff;   /* keep icon white */
+}
+
+/* WhatsApp base state */
+.icon.x-whatsapp .layer span,
+.icon.x-whatsapp .layer .fab {
+  color: #25D366;
+  border-color: #25D366;
+  box-shadow: 0 0 6px rgba(37, 211, 102, 0.6);
+  text-shadow: 0 0 6px rgba(37, 211, 102, 0.4);
+}
+
+
+/* Tablets */
+@media (max-width: 992px) {
+  .icons {
+    gap: 25px;
+    flex-wrap: wrap; /* allow wrapping */
+  }
+
+  .layer {
+    width: 50px;
+    height: 50px;
+  }
+
+  #about i {
+    font-size: 20px;
+    padding: 8px;
+  }
+
+  .layer span.fab {
+    font-size: 24px;
+  }
+}
+
+/* Phones */
+@media (max-width: 576px) {
+  .icons {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .layer {
+    width: 40px;
+    height: 40px;
+  }
+
+  #about i {
+    font-size: 18px;
+    padding: 6px;
+  }
+
+  .layer span.fab {
+    font-size: 20px;
+  }
+
+  .text {
+    font-size: 12px; /* smaller labels */
+    margin-top: 8px;
+  }
+}

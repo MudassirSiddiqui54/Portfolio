@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flappy Bird SVG</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: skyblue;
+            font-family: Arial, sans-serif;
+        }
+
+        svg {
+            display: block;
+            margin: auto;
+            background: linear-gradient(to bottom, #dceeff 0%, #87cedc 100%);
+        }
+
+        #overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-direction: column;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="overlay">
+        <div id="message">Game Over!</div>
+        <button onclick="startGame()">Play Again</button>
+    </div>
+
+    <svg id="gameSVG" width="400" height="600">
+        <defs>
+            <linearGradient id="pipeGradient" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#4CAF50" />
+                <stop offset="100%" stop-color="#2E7D32" />
+            </linearGradient>
+            <symbol id="cloud" viewBox="0 0 60 30">
+                <ellipse cx="20" cy="20" rx="20" ry="10" fill="white" opacity="0.8" />
+                <ellipse cx="40" cy="20" rx="15" ry="10" fill="white" opacity="0.8" />
+                <ellipse cx="30" cy="15" rx="15" ry="12" fill="white" opacity="0.9" />
+            </symbol>
+        </defs>
+
+        <g id="cloudLayer1"></g>
+        <g id="cloudLayer2"></g>
+
+        <rect id="bird" width="30" height="30" fill="yellow" x="50" y="150" />
+        <text id="scoreText" x="10" y="40" fill="black" font-size="42" font-weight="bold">0</text>
+    </svg>
+
+    <script>
+        const svg = document.getElementById("gameSVG");
+        const bird = document.getElementById("bird");
+        const scoreText = document.getElementById("scoreText");
+        const overlay = document.getElementById("overlay");
+        const cloudLayer1 = document.getElementById("cloudLayer1");
+        const cloudLayer2 = document.getElementById("cloudLayer2");
+
+        const state = {
+            birdY: 150,
+            velocity: 0,
+            gravity: 0.5,
+            lift: -8,
+            pipes: [],
+            pipeWidth: 60,
+            pipeGap: 150,
+            frame: 0,
+            score: 0,
+            running: true,
+            clouds: []
+        };
+
+        function createPipe(topHeight) {
+            const x = 400;
+            const topPipe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            topPipe.setAttribute("x", x);
+            topPipe.setAttribute("y", 0);
+            topPipe.setAttribute("width", state.pipeWidth);
+            topPipe.setAttribute("height", topHeight);
+            topPipe.setAttribute("fill", "url(#pipeGradient)");
+            svg.appendChild(topPipe);
+
+            const bottomPipe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            bottomPipe.setAttribute("x", x);
+            bottomPipe.setAttribute("y", topHeight + state.pipeGap);
+            bottomPipe.setAttribute("width", state.pipeWidth);
+            bottomPipe.setAttribute("height", 600 - topHeight - state.pipeGap);
+            bottomPipe.setAttribute("fill", "url(#pipeGradient)");
+            svg.appendChild(bottomPipe);
+
+            state.pipes.push({ topPipe, bottomPipe, x: x, passed: false, top: topHeight });
+        }
+
+        function createClouds() {
+            for (let i = 0; i < 8; i++) {
+                const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+                use.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#cloud');
+                const x = Math.random() * 400;
+                const y = Math.random() * 100;
+                use.setAttribute("x", x);
+                use.setAttribute("y", y);
+                use.setAttribute("width", 60);
+                use.setAttribute("height", 30);
+                const speed = 0.3 + Math.random() * 0.3;
+                const layer = i % 2 === 0 ? cloudLayer1 : cloudLayer2;
+                layer.appendChild(use);
+                state.clouds.push({ el: use, x, y, speed });
+            }
+        }
+
+        function updateClouds() {
+            for (let cloud of state.clouds) {
+                cloud.x -= cloud.speed;
+                if (cloud.x < -60) cloud.x = 400;
+                cloud.el.setAttribute("x", cloud.x);
+            }
+        }
+
+        function resetGame() {
+            state.running = false;
+            overlay.style.display = 'flex';
+        }
+
+        function startGame() {
+            state.birdY = 150;
+            state.velocity = 0;
+            state.pipes.forEach(pipe => {
+                pipe.topPipe.remove();
+                pipe.bottomPipe.remove();
+            });
+            state.pipes = [];
+            state.frame = 0;
+            state.score = 0;
+            state.running = true;
+            scoreText.textContent = "0";
+            overlay.style.display = 'none';
+            gameLoop();
+        }
+
+        function updatePipes() {
+            for (let i = 0; i < state.pipes.length; i++) {
+                const pipe = state.pipes[i];
+                pipe.x -= 2;
+                pipe.topPipe.setAttribute("x", pipe.x);
+                pipe.bottomPipe.setAttribute("x", pipe.x);
+
+                const birdBox = { x: 50, y: state.birdY, width: 30, height: 30 };
+                const collides = (
+                    birdBox.x < pipe.x + state.pipeWidth &&
+                    birdBox.x + birdBox.width > pipe.x &&
+                    (birdBox.y < pipe.top || birdBox.y + birdBox.height > pipe.top + state.pipeGap)
+                );
+
+                if (collides) return resetGame();
+
+                if (!pipe.passed && pipe.x + state.pipeWidth < birdBox.x) {
+                    state.score++;
+                    pipe.passed = true;
+                    scoreText.textContent = state.score;
+                }
+
+                if (pipe.x + state.pipeWidth < 0) {
+                    pipe.topPipe.remove();
+                    pipe.bottomPipe.remove();
+                    state.pipes.splice(i, 1);
+                    i--;
+                }
+            }
+
+            if (state.frame % 100 === 0) {
+                const top = Math.random() * (600 - state.pipeGap - 100) + 20;
+                createPipe(top);
+            }
+        }
+
+        function updateBird() {
+            state.velocity += state.gravity;
+            state.birdY += state.velocity;
+            bird.setAttribute("y", state.birdY);
+            const angle = Math.min(Math.max(state.velocity * 4, -30), 60);
+            bird.setAttribute("transform", `rotate(${angle} 65 ${state.birdY + 15})`);
+
+            if (state.birdY > 600 || state.birdY < 0) {
+                resetGame();
+            }
+        }
+
+        function gameLoop() {
+            if (!state.running) return;
+
+            state.frame++;
+            updateBird();
+            updatePipes();
+            updateClouds();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function flap() {
+            if (state.running) {
+                state.velocity = state.lift; // Makes the bird jump
+            }
+        }
+
+        window.addEventListener("keydown", flap);
+        svg.addEventListener("click", flap);
+        window.addEventListener("touchstart", flap); // Add mobile compatibility
+        createClouds();
+        gameLoop();
+    </script>
+</body>
+
+</html>

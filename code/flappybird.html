@@ -216,7 +216,13 @@
             }
         }
 
-        window.addEventListener("keydown", flap);
+        window.addEventListener("keydown", function (e) {
+            if (e.code === "ArrowUp" || e.code === "Space") {
+            e.preventDefault();   // ⬅ stops parent page scrolling
+            flap();
+            }
+        });
+
         svg.addEventListener("click", flap);
         window.addEventListener("touchstart", flap); // Add mobile compatibility
         createClouds();

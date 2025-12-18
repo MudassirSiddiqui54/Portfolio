@@ -633,7 +633,7 @@ pre code {
 // Update preview
 const previewContainer = document.getElementById('preview-container');
 if (projectData.previewType === 'iframe') {
-    previewContainer.innerHTML = `<iframe src="${projectData.previewContent}" class="project-iframe" allowfullscreen></iframe>`;
+    previewContainer.innerHTML = `<iframe src="${projectData.previewContent}" class="project-iframe" tabindex="0" allowfullscreen></iframe>`;
 } else {
     // Add error handling for missing images
     previewContainer.innerHTML = `

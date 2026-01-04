@@ -1,3 +1,6 @@
+html {
+  scroll-behaviour:smooth;
+}
 /* Particle Background */
 :root {
   color-scheme: dark;

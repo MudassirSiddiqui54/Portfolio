@@ -1,8 +1,10 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MapPin, Calendar, Sparkles } from "lucide-react";
+import { MapPin, Calendar } from "lucide-react";
 import Particles from "@/components/ui/Particles";
+import aboutImg from "@/assets/about.png";
+import aboutBgImg from "@/assets/aboutbg.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,7 +57,7 @@ function Card3D() {
 					className="absolute inset-0 z-0"
 					style={{
 						filter: "blur(5px)",
-						backgroundImage: `url(/src/assets/aboutbg.png)`,
+						backgroundImage: `url(${aboutBgImg})`,
 						backgroundSize: "cover",
 						backgroundPosition: "center",
 					}}
@@ -63,7 +65,7 @@ function Card3D() {
 				{/* Foreground */}
 				<img
 					ref={imgRef}
-					src="/src/assets/about.png"
+					src={aboutImg}
 					alt="Mudassir"
 					className="absolute inset-0 w-full h-full object-cover z-10"
 					style={{ transition: "transform 0.1s ease-out" }}

@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
 import SpotlightCard from "@/components/ui/SpotlightCard";
+import cybershieldImg from "@/assets/cybershield.png";
 
 const PROJECTS = [
 	{
@@ -31,8 +32,8 @@ const PROJECTS = [
 		description:
 			"Frontend application built for small car dealers to take their businesses online. Contributed to UI and core inventory features.",
 		tags: ["HTML", "CSS", "JavaScript"],
-		live: "https://hardiksedani.github.io/COLLEGEPROJECT1/",
-		github: "https://github.com/hardiksedani/COLLEGEPROJECT1",
+		live: "https://motoverse-six.vercel.app/",
+		github: "https://github.com/MudassirSiddiqui54/motoverse-frontend",
 		color: "#00ff88",
 		bg: "linear-gradient(135deg, #0a1a10 0%, #060010 100%)",
 	},
@@ -46,7 +47,7 @@ const PROJECTS = [
 		github: "https://github.com/hardiksedani/CYBERSHEILD",
 		color: "#ff4444",
 		bg: "linear-gradient(135deg, #1a0a0a 0%, #060010 100%)",
-		image: "/src/assets/cybershield.png",
+		image: cybershieldImg,
 	},
 	{
 		number: "05",
@@ -58,6 +59,17 @@ const PROJECTS = [
 		github: "https://github.com/MudassirSiddiqui54/Project-Management-System-frontend",
 		color: "#f5a623",
 		bg: "linear-gradient(135deg, #1a1200 0%, #060010 100%)",
+	},
+	{
+		number: "06",
+		title: "ASCII-Lens",
+		description:
+			"This is a website that converts image to text while retaining the structure and style and can also convert live using video. It haas various functions and modifications",
+		tags: ["HTML", "CSS", "Javascript"],
+		live: "https://mudassirsiddiqui54.github.io/ASCII-Lens/",
+		github: "https://github.com/MudassirSiddiqui54/ASCII-Lens",
+		color: "#3b82f6",
+		bg: "linear-gradient(135deg, #0a1220 0%, #060010 100%)",
 	},
 ];
 
